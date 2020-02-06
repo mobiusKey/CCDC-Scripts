@@ -2,8 +2,7 @@
 echo "running..." > /dev/tty
 while :
 do
-
-  logFile=$(echo /var/log/auth.log | grep "authentication failure")
+  logFile=$(cat /var/log/auth.log | grep "authentication failure")
   knownFailures=$(cat ./knownFailures)
 	echo "checking failures..." > /dev/tty
         output=$(diff <(echo "$logFile") <(echo "$knownFailures"))
