@@ -1,19 +1,15 @@
 #!/bin/bash
-while [true]
+echo "running..." > /dev/tty
+while :
 do
-    logFile = ./test.txt
-    knownFailures = ./knownFailures
 
-    if [test ! -f "knownFailures"]; then
-        echo "" > ./knownFailures;
-    fi
-        
-    if test -f "$logFile"; then
-        failures = cat $logFile | grep "authentication failure"
-        previousFails = cat $knownFailures | grep "authentication failure"
-        
-        output = diff <(echo "$failures") <(echo "$previousFails")
-        
-        echo < (cat $output | grep -E "^\+")
-    fi
+  logFile=$(echo /var/log/auth.log | grep "authentication failure")
+  knownFailures=$(cat ./knownFailures)
+	echo "checking failures..." > /dev/tty
+        output=$(diff <(echo "$logFile") <(echo "$knownFailures"))
+        echo "$output" > /dev/tty
+echo "saving results..." > /dev/tty
+echo "$logFile" > ./knownFailures
+sleep 5
+
 done
